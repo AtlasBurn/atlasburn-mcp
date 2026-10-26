@@ -1,15 +1,15 @@
 # AtlasBurn MCP
 
-**Ask your AI assistant about your AI cost, runway, and guardrails — from your real AtlasBurn data.**
+**See where your AI spend goes. Catch costly agent behavior before it grows. Ask about it from Claude, Cursor or any MCP client.**
 
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-2025--06--18-6B46C1.svg)](https://modelcontextprotocol.io)
 
-AtlasBurn is an AI cost-intelligence platform. The AtlasBurn [Model Context Protocol](https://modelcontextprotocol.io)
+[AtlasBurn](https://atlasburn.com) shows which model, feature and workflow caused your AI bill, and catches loops and retry storms while they happen. The AtlasBurn [Model Context Protocol](https://modelcontextprotocol.io)
 server lets any MCP client — Claude, ChatGPT, Cursor, Codex, VS Code, and others — read your
-AtlasBurn data: spend, cost breakdowns, runway forecast, guardrail status, and runaway-agent signals.
+AtlasBurn data (spend, cost by model and feature, runway forecast, guardrail status, runaway-agent signals) and can set AtlasBurn up in your project for you.
 
-**Read-only. Content-blind. OAuth 2.1 + PKCE (S256).**
+**Content-blind. OAuth 2.1 + PKCE (S256). Read-only data tools; a new key only with your approval in the browser.**
 
 ---
 
@@ -43,11 +43,11 @@ Then:
 2. Sign in to your AtlasBurn account and approve **read-only** access.
 3. Ask away.
 
-You need an AtlasBurn account with the [SDK](https://www.npmjs.com/package/@atlasburn/sdk) or edge proxy sending usage telemetry, so there is data to read.
+No data yet? Ask: *"Set up AtlasBurn in this project."* (see [Set up from your assistant](#set-up-from-your-assistant)).
 
 ## Tools
 
-All tools are read-only (`readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, `openWorldHint: false`) and return both text and `structuredContent` matching a published `outputSchema`.
+The five data tools are read-only (`readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, `openWorldHint: false`). Every tool returns text plus `structuredContent` matching a published `outputSchema`.
 
 | Tool | Arguments | Returns |
 |------|-----------|---------|
@@ -56,9 +56,20 @@ All tools are read-only (`readOnlyHint: true`, `destructiveHint: false`, `idempo
 | `get_runway_forecast` | `windowDays` | Runway days, daily burn, reserves, projected monthly bill, MRR, systemic-risk probabilities |
 | `get_guardrail_status` | — | Guardrails enabled / mode / status (ACTIVE · THROTTLED · SUSPENDED), budgets, recent breaches |
 | `get_runtime_signals` | `windowDays` | Request rate, retry rate, loop probability, context-expansion rate, model mix |
+| `request_integration_key` | `method` (`sdk` or `proxy`) | Starts a key request and returns an approval link. Creates nothing by itself. |
+| `get_setup_code` | `requestId` | After you approve: a single-use setup code and the CLI commands to run |
 
 The full tool contract (descriptions, input and output JSON Schemas, annotations) is in
 [`src/lib/mcp/tools.ts`](./src/lib/mcp/tools.ts).
+
+### Set up from your assistant
+
+1. You ask: *"Set up AtlasBurn in this project."* The assistant calls `request_integration_key`, which only stores a pending request (10 minutes) and returns an approval link.
+2. You open the link and approve. Approval needs a fresh sign-in (within the last 5 minutes) by the same account that connected the assistant.
+3. The assistant calls `get_setup_code` and runs `npx abn init --code <code>` in your project. The code is single-use and expires in 10 minutes.
+4. The CLI exchanges the code for a new ingest key and writes it to your env file. **The key goes only to the CLI. It never passes through the assistant or the chat.**
+
+New keys are added, never replacing or revoking existing ones, and requests are rate limited.
 
 ### Example prompts
 
@@ -67,6 +78,7 @@ The full tool contract (descriptions, input and output JSON Schemas, annotations
 3. "What's my AtlasBurn runway and burn forecast right now?"
 4. "Are my AtlasBurn guardrails active, and have there been any budget breaches recently?"
 5. "Does anything in my AtlasBurn runtime signals look like a looping or runaway agent?"
+6. "Set up AtlasBurn in this project."
 
 ## Endpoints
 
@@ -85,10 +97,10 @@ A request without a valid token gets `401` with
 ## Security model
 
 - **OAuth 2.1** authorization-code flow. **PKCE is mandatory and `S256` only**; `plain` and missing challenges are rejected.
-- One read-only scope, `atlasburn:read`. Access tokens last 1 hour; refresh tokens last 30 days and rotate on every use.
+- One scope, `atlasburn:read`. No tool can change settings, budgets, guardrails or usage data, or revoke a key. Access tokens last 1 hour; refresh tokens last 30 days and rotate on every use.
 - **Tenant isolation:** the organization is taken from the verified token, never from a tool argument.
 - **Content-blind:** only aggregated economics and metadata. Prompts and model outputs are never exposed.
-- **Zero writes:** no tool can change settings, budgets, keys, or data.
+- **Keys need a human:** the only writes are a pending key request and a one-time setup code. A key is created only after you approve in the browser, and is delivered only to the CLI.
 - Authorization codes are single-use. Codes and tokens are never stored in plaintext, only as salted hashes.
 - Rate limited per token and per IP. Every tool call is audit-logged.
 
@@ -100,7 +112,7 @@ This repository is the public **protocol layer** of the AtlasBurn MCP server. Th
 storage, and authorization endpoints run inside the hosted AtlasBurn service and are not included.
 
 ```
-src/lib/mcp/tools.ts          Tool contract: names, descriptions, input/output schemas, annotations
+src/lib/mcp/tools.ts          Tool contract (generated from the hosted server): names, descriptions, input/output schemas, annotations
 src/lib/mcp/oauth-config.ts   Scope, PKCE method, token lifetimes, protocol version, origin resolution
 src/lib/mcp/pkce.ts           PKCE S256 transform + constant-time verifier check
 src/lib/mcp/http.ts           CORS headers and JSON response helpers
@@ -136,4 +148,4 @@ Issues and pull requests are welcome. Please read the [Code of Conduct](./CODE_O
 
 ## License
 
-[Apache-2.0](./LICENSE) © 2026 AtlasBurn Institutional.
+[Apache-2.0](./LICENSE) © 2026 AtlasBurn.

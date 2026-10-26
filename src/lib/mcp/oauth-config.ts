@@ -25,7 +25,14 @@ export const PREFIX = {
   code: "abcode_",     // authorization code
   access: "abtok_",    // access token
   refresh: "abref_",   // refresh token
+  request: "abreq_",   // integration-key request (approved by a human in the browser)
+  setup: "abset_",     // one-time CLI setup code (redeemed only at /api/cli/claim)
 } as const;
+
+/** Integration-key flow (see src/lib/mcp/key-requests.ts). */
+export const KEY_REQUEST_TTL_SEC = 60 * 10; // the user has 10 minutes to approve
+export const SETUP_CODE_TTL_SEC = 60 * 10;  // and the CLI 10 minutes to redeem the code
+export const FRESH_AUTH_MAX_AGE_SEC = 60 * 5; // approval needs a sign-in from the last 5 minutes
 
 /** MCP protocol version we advertise (echoes the client's if it sends a known one). */
 export const MCP_PROTOCOL_VERSION = "2025-06-18";
