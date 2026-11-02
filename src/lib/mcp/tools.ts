@@ -66,17 +66,23 @@ const windowSchema = {
 const noArgsSchema = { type: "object", properties: {}, additionalProperties: false };
 
 // Every data tool may also return `setup` when the account has never received any
-// usage data: a short, user-facing note on how to start sending it.
+// usage data: a short, user-facing note on how to start sending it. It says what
+// AtlasBurn tracks (API calls an app pays for per token, not chat subscriptions),
+// covers Node.js and every other language, and offers a demo-data preview.
 const setupSchema = {
   type: "object",
   description: "Present only when this account has never received usage data: how to start sending it.",
   properties: {
     status: { type: "string", enum: ["no_telemetry"] },
     message: { type: "string" },
-    steps: { type: "array", items: { type: "string" } },
+    whatIsTracked: { type: "string", description: "Which AI usage AtlasBurn can see (and what it can't)." },
+    steps: { type: "array", items: { type: "string" }, description: "Setup for Node.js / TypeScript apps." },
+    otherLanguages: { type: "string", description: "Setup for Python and every other language (proxy)." },
+    fromCodingAssistant: { type: "string", description: "Setting it up from a coding assistant with project access." },
+    preview: { type: "string", description: "How to look at sample data before connecting." },
     docsUrl: { type: "string" },
   },
-  required: ["status", "message", "steps", "docsUrl"],
+  required: ["status", "message", "whatIsTracked", "steps", "otherLanguages", "fromCodingAssistant", "preview", "docsUrl"],
   additionalProperties: false,
 };
 
