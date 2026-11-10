@@ -144,7 +144,16 @@ Issues and pull requests are welcome. Please read the [Code of Conduct](./CODE_O
 - Website: [atlasburn.com](https://atlasburn.com)
 - Dashboard: [app.atlasburn.com](https://app.atlasburn.com)
 - Docs: [docs.atlasburn.com](https://docs.atlasburn.com)
-- SDK: [@atlasburn/sdk](https://www.npmjs.com/package/@atlasburn/sdk)
+  - [MCP server guide](https://docs.atlasburn.com/docs/mcp-server/) · [Quickstart](https://docs.atlasburn.com/docs/quickstart/) ·
+    [Guardrails and the kill switch](https://docs.atlasburn.com/docs/guardrails/) ·
+    [Edge Proxy for Python, Go and any language](https://docs.atlasburn.com/docs/proxy-quickstart/) ·
+    [Changelog](https://docs.atlasburn.com/docs/changelog/)
+- Blog: [Ask your AI what your AI costs](https://atlasburn.com/blog/ask-your-ai-cost-in-chat/) ·
+  [all posts](https://atlasburn.com/blog/)
+- How AtlasBurn compares: [vs Helicone](https://atlasburn.com/blog/atlasburn-vs-helicone/) ·
+  [vs Langfuse](https://atlasburn.com/blog/atlasburn-vs-langfuse/) · [vs LiteLLM](https://atlasburn.com/blog/atlasburn-vs-litellm/) ·
+  [vs Portkey](https://atlasburn.com/blog/atlasburn-vs-portkey/)
+- SDK: [@atlasburn/sdk](https://www.npmjs.com/package/@atlasburn/sdk) · [github.com/AtlasBurn/sdk](https://github.com/AtlasBurn/sdk)
 
 ## License
 
