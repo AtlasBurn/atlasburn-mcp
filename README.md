@@ -148,6 +148,7 @@ Issues and pull requests are welcome. Please read the [Code of Conduct](./CODE_O
     [Guardrails and the kill switch](https://docs.atlasburn.com/docs/guardrails/) ·
     [Edge Proxy for Python, Go and any language](https://docs.atlasburn.com/docs/proxy-quickstart/) ·
     [Changelog](https://docs.atlasburn.com/docs/changelog/)
+- Guide: [How to stop a runaway AI agent loop before it runs up your OpenAI or Anthropic bill](https://dev.to/akhil_5d07/how-to-stop-a-runaway-ai-agent-loop-before-it-runs-up-your-openai-or-anthropic-bill-58oi) (DEV): a copyable per-feature circuit breaker and how the tools compare
 - Blog: [Ask your AI what your AI costs](https://atlasburn.com/blog/ask-your-ai-cost-in-chat/) ·
   [all posts](https://atlasburn.com/blog/)
 - How AtlasBurn compares: [vs Helicone](https://atlasburn.com/blog/atlasburn-vs-helicone/) ·
