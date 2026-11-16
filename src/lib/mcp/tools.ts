@@ -2,7 +2,7 @@
  * AtlasBurn MCP — tool definitions (public contract).
  *
  * All tools are org-scoped (orgId comes from the verified OAuth token, never from
- * arguments) and content-blind. The five data tools are read-only. The two
+ * arguments) and content-blind. The six data tools are read-only. The two
  * integration tools (request_integration_key / get_setup_code) can only START a key
  * request: nothing is created until the user approves it in the browser with a fresh
  * sign-in, and the key itself is delivered only to the AtlasBurn CLI, never to the
@@ -256,6 +256,44 @@ const runtimeSignalsOutput = {
   additionalProperties: false,
 };
 
+const nullableString = { anyOf: [{ type: "string" }, { type: "null" }] };
+
+const connectionInfoOutput = {
+  type: "object",
+  properties: {
+    connected: { type: "boolean" },
+    organization: {
+      type: "object",
+      properties: {
+        id: { type: "string" },
+        name: { ...nullableString, description: "Company name set in AtlasBurn; null if none is set." },
+      },
+      required: ["id", "name"],
+    },
+    workspace: {
+      type: "object",
+      properties: {
+        id: { type: "string" },
+        name: { type: "string" },
+        environment: { type: "string", enum: ["production", "staging", "development", "other"] },
+        isMain: { type: "boolean", description: "True for the organization's main (Production) workspace." },
+      },
+      required: ["id", "name", "environment", "isMain"],
+    },
+    connection: {
+      type: "object",
+      properties: {
+        status: { type: "string", enum: ["active"] },
+        scope: { type: "string", enum: ["workspace"], description: "The other tools read this one workspace, not the whole organization." },
+        note: { type: "string" },
+      },
+      required: ["status", "scope"],
+    },
+  },
+  required: ["connected", "organization", "workspace", "connection"],
+  additionalProperties: false,
+};
+
 export const TOOLS: McpTool[] = [
   {
     name: "get_cost_summary",
@@ -296,6 +334,14 @@ export const TOOLS: McpTool[] = [
       "Behavioral runtime signals for this organization over a window (default 30 days): request rate, retry rate, loop probability, context-expansion rate, token volume, and model mix. Use this to tell whether anything looks like a runaway/looping agent.",
     inputSchema: windowSchema,
     outputSchema: runtimeSignalsOutput,
+  },
+  {
+    name: "get_connection_info",
+    annotations: { title: "Connection info", ...READ_ONLY },
+    description:
+      "Which AtlasBurn organization and workspace this connection is signed in to, and the environment of that workspace (Production, Staging, Development). Every other AtlasBurn tool reads exactly this one workspace, not the whole organization. Use it to answer \"which workspace / organization is this data from?\". Returns an error if the connection is no longer authorized.",
+    inputSchema: noArgsSchema,
+    outputSchema: connectionInfoOutput,
   },
   {
     name: "request_integration_key",

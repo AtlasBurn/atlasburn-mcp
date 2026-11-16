@@ -47,7 +47,7 @@ No data yet? Ask: *"Set up AtlasBurn in this project."* (see [Set up from your a
 
 ## Tools
 
-The five data tools are read-only (`readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, `openWorldHint: false`). Every tool returns text plus `structuredContent` matching a published `outputSchema`.
+The six data tools are read-only (`readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, `openWorldHint: false`). Every tool returns text plus `structuredContent` matching a published `outputSchema`.
 
 | Tool | Arguments | Returns |
 |------|-----------|---------|
@@ -56,6 +56,7 @@ The five data tools are read-only (`readOnlyHint: true`, `destructiveHint: false
 | `get_runway_forecast` | `windowDays` | Runway days, daily burn, reserves, projected monthly bill, MRR, systemic-risk probabilities |
 | `get_guardrail_status` | — | Guardrails enabled / mode / status (ACTIVE · THROTTLED · SUSPENDED), budgets, recent breaches |
 | `get_runtime_signals` | `windowDays` | Request rate, retry rate, loop probability, context-expansion rate, model mix |
+| `get_connection_info` | — | The organization and workspace this connection reads (name, id, environment), and its scope: one workspace, not the whole organization |
 | `request_integration_key` | `method` (`sdk` or `proxy`) | Starts a key request and returns an approval link. Creates nothing by itself. |
 | `get_setup_code` | `requestId` | After you approve: a single-use setup code and the CLI commands to run |
 
