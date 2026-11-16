@@ -195,7 +195,7 @@ const guardrailStatusOutput = {
   properties: {
     enabled: { type: "boolean" },
     mode: { type: ["string", "null"], description: "e.g. alert / soft_stop / hard_stop." },
-    status: { type: ["string", "null"], description: "Authoritative enforcement status: ACTIVE | THROTTLED | SUSPENDED." },
+    status: { type: ["string", "null"], description: "Live org-wide enforcement status, resolved like the SDK gate: ACTIVE | THROTTLED | SUSPENDED. An expired cut reads ACTIVE; recentBreaches is history and does not imply current enforcement." },
     dailyBudgetUsd: { type: ["number", "null"] },
     hourlyBudgetUsd: { type: ["number", "null"] },
     pausedFeatures: {
